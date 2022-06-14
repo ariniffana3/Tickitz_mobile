@@ -7,7 +7,7 @@ export default function Home() {
     <View>
       <Text>home</Text>
 
-      {/* <View styles={styles.header__first}>
+      <View styles={styles.header__first}>
         <View styles={styles.header} id="header">
           <View styles={styles.header__left}>
             <ul styles={styles.ul}>
@@ -36,19 +36,16 @@ export default function Home() {
               </li>
             </ul>
           </View>
-          <View styles={styles.header__hamburger} onclick="showMenu">
+          <View styles={styles.header__hamburger} onPress="showMenu">
             <View styles={styles.header__hamburger__line} />
             <View styles={styles.header__hamburger__line} />
             <View styles={styles.header__hamburger__line} />
           </View>
-          <Button styles={styles.header__button} onClick={signIn}>
+          <Button styles={styles.header__button} onPress={signIn}>
             Sign In
           </Button>
         </View>
-        <View
-          styles={styles.header__menu}
-          id="header__menu"
-          style={{display: 'none'}}>
+        <View styles={styles.header__menu} id="header__menu">
           <View styles={styles.header__menu__home}>Home</View>
           <View styles={styles.header__menu__listMovie}>List Movie</View>
           <View styles={styles.header__menu__signIn}>Sign In</View>
@@ -94,7 +91,7 @@ export default function Home() {
           </View>
 
           <p>
-            <a href="" onClick={handleViewAll}>
+            <a href="" onPress={handleViewAll}>
               {' '}
               view all
             </a>
@@ -104,7 +101,6 @@ export default function Home() {
           <ul>
             {data.map(item => (
               <li key={item.id}>
-
                 <CardUp
                   data={item}
                   handleDetail={handleDetailMovie}
@@ -125,7 +121,7 @@ export default function Home() {
             <View styles={styles.main1__title__p1__line} />
           </View>
           <p>
-            <a href="" onClick={handleViewAll}>
+            <a href="" onPress={handleViewAll}>
               {' '}
               view all
             </a>
@@ -141,7 +137,7 @@ export default function Home() {
                       ? styles.main1__month__active
                       : styles.main1__month
                   }`}
-                  onClick={() => {
+                  onPress={() => {
                     setReleaseDate({date: item.number});
                   }}>
                   {item.title}
@@ -242,7 +238,7 @@ export default function Home() {
         <View styles={styles.footer__copyright}>
           © 2020 Tickitz. All Rights Reserved
         </View>
-      </View> */}
+      </View>
     </View>
   );
 }

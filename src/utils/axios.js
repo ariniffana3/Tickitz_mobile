@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axiosApiInstances = axios.create({
   // baseURL: "http://192.168.100.1:3001"
-  baseUrL: 'http://project-tickitz.herokuapp.com',
+  baseUrL: 'https://project-tickitz.herokuapp.com',
 });
 
 // Add a request interceptor
