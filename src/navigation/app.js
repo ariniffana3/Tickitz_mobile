@@ -2,6 +2,8 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Feather';
+import Icon2 from 'react-native-vector-icons/Ionicons';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -36,6 +38,19 @@ function ProfileNavigator() {
     </Stack.Navigator>
   );
 }
+function MovieNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        // component={Home}
+        name="Movie"
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 export default function AppNavigator() {
   return (
     <Drawer.Navigator
@@ -55,13 +70,24 @@ export default function AppNavigator() {
         }}
       />
       <Drawer.Screen
+        component={MovieNavigator}
+        name="MovieNavigator"
+        options={{
+          title: 'List Movie',
+          header: props => <Header {...props} />,
+          drawerIcon: ({size, color}) => (
+            <Icon3 name="movie" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
         component={ProfileNavigator}
         name="ProfileNavigator"
         options={{
-          title: 'Home',
+          title: 'Profile',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
-            <Icon name="home" size={size} color={color} />
+            <Icon2 name="person" size={size} color={color} />
           ),
         }}
       />

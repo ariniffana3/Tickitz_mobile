@@ -9,11 +9,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import styles from './styles';
+import styles from '../Home/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
 import CardUp from '../../component/CardUp';
-import CardDown from '../../component/CardDown';
 
 export default function Home(props) {
   const limit = 7;

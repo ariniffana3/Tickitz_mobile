@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Image, Button} from 'react-native';
+import {View, Text, Image, Button, ScrollView} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -55,14 +55,14 @@ function SignUp(props) {
     //   });
     // }
   };
-  const signUp = () => {
-    props.navigation.navigate('SignUp');
-  };
-  const ResetPass = () => {
-    props.navigation.navigate('ResetPass');
+
+  const Login = () => {
+    props.navigation.navigate('AppScreen', {
+      screen: 'Home',
+    });
   };
   return (
-    <View>
+    <ScrollView>
       <View style={styles.body}>
         <View style={styles.main}>
           <View style={styles.main__container}>
@@ -158,7 +158,7 @@ function SignUp(props) {
 
                 <Text style={styles.text__reset}>
                   Already have account ?
-                  <Text onPress={ResetPass} style={styles.text__reset__link}>
+                  <Text onPress={Login} style={styles.text__reset__link}>
                     Sign In
                   </Text>
                 </Text>
@@ -167,7 +167,7 @@ function SignUp(props) {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
