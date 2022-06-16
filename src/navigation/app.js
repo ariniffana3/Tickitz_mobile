@@ -11,6 +11,8 @@ const Drawer = createDrawerNavigator();
 import Home from '../screen/Home';
 import DrawerContent from '../component/DrawerContent';
 import Header from '../component/Header';
+import ViewAll from '../screen/ViewAll';
+import Order from '../screen/Order';
 
 function HomeNavigator() {
   return (
@@ -29,7 +31,7 @@ function ProfileNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        // component={Home}
+        component={Order}
         name="Profile"
         options={{
           headerShown: false,
@@ -42,7 +44,7 @@ function MovieNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        // component={Home}
+        component={ViewAll}
         name="Movie"
         options={{
           headerShown: false,

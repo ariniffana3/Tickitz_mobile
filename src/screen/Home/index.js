@@ -217,7 +217,7 @@ export default function Home(props) {
               placeholder="Type your email"
               style={styles.footer__subscription__submit__input}
             />
-            <Button title="Join now" />
+            <Button title="Join now" color="#5F2EEA" />
           </View>
           <Text style={styles.footer__subscription__text__down}>
             By joining you as a Tickitz member,will always send you the latest

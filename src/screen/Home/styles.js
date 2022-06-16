@@ -203,8 +203,10 @@ export default StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: '58%',
+    // width: '58%',
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginVertical: 20,
   },
   //   // main1__img__container__hover button,
   //   // .main1__img__container__hover .main1__img__desc :{
@@ -223,17 +225,18 @@ export default StyleSheet.create({
   //   // }
   main1__img__hover: {
     // height: 370,
-    width: 223,
+    width: 200,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     border: '2 solid #ffffff',
     borderRadius: 8,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    // marginRight: 10,
     flexDirection: 'column',
     paddingBottom: 10,
-    marginVertical: 10,
+    // marginVertical: 10,
+    marginBottom: 10,
   },
   //   // main1__img__hover button :{
   //   //   marginTop: 35,
