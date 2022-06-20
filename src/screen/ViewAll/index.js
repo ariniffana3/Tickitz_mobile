@@ -14,6 +14,7 @@ import styles from '../Home/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
 import CardUp from '../../component/CardUp';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function Home(props) {
   const limit = 4;
@@ -23,13 +24,15 @@ export default function Home(props) {
   const [dataRelease, setDataRelease] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   let [releaseDate, setReleaseDate] = useState({
-    date: '',
+    date: 4,
   });
   const [totalPage, setTotalPage] = useState(10);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
+  const [bogor, setBogor] = useState('Bogor');
+  const [semarang, setSemarang] = useState('Semarang');
 
   const dataUser = AsyncStorage.getItem('dataUser');
   const newData = 1;
@@ -48,13 +51,13 @@ export default function Home(props) {
     {number: 12, title: 'December'},
   ];
 
-  useEffect(() => {
-    getdataMovie();
-  }, []);
+  // useEffect(() => {
+  //   getdataMovie();
+  // }, []);
 
-  useEffect(() => {
-    getdataMovie();
-  }, [releaseDate.date, page]);
+  // useEffect(() => {
+  //   getdataMovie();
+  // }, [releaseDate.date, page]);
 
   const token = AsyncStorage.getItem('token');
 
@@ -83,6 +86,7 @@ export default function Home(props) {
     }
   };
 
+  console.log(data);
   const handleRefresh = () => {
     console.log('REFRESH SCREEN');
     setPage(1);
@@ -138,10 +142,11 @@ export default function Home(props) {
   };
   return (
     <ScrollView
-      onRefresh={handleRefresh}
-      refreshing={refresh}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}>
+    // onRefresh={handleRefresh}
+    // refreshing={refresh}
+    // onEndReached={handleLoadMore}
+    // onEndReachedThreshold={0.1}
+    >
       <View style={`${styles.main1} ${styles.addition__main1}`}>
         <View style={styles.main1__title}>
           <View style={styles.main__title__p1}>
@@ -155,7 +160,11 @@ export default function Home(props) {
         </View>
         <View style={styles.main1__title}>
           <View style={styles.main__title__p1}>
-            <Text>DropDown</Text>
+            {/* <DropDownPicker
+              Bogor={bogor}
+              Semarang={semarang}
+              styles={{width: 50}}
+            /> */}
             <View style={styles.main1__title__p1__line} />
           </View>
 
@@ -167,7 +176,7 @@ export default function Home(props) {
         </View>
         <View style={styles.main1__month__container}>
           <View>
-            <FlatList
+            {/* <FlatList
               horizontal
               data={month}
               keyExtractor={item => item.name}
@@ -180,18 +189,18 @@ export default function Home(props) {
                   <Text style={styles.main1__month__text}>{item.title}</Text>
                 </TouchableOpacity>
               )}
-            />
+            /> */}
           </View>
         </View>
         <View style={styles.main1__img__container__hover__viewAll}>
-          <FlatList
+          {/* <FlatList
             horizontal
             data={data}
             keyExtractor={item => item.id}
             renderItem={({item}) => (
               <CardUp data={item} handleDetail={handleDetailMovie} />
             )}
-          />
+          /> */}
           {/* <View> */}
           {/* {dataRelease.map(item => ( */}
           {/* <li key={item.id}> */}

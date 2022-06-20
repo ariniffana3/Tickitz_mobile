@@ -43,17 +43,17 @@ export default function Home(props) {
     {number: 12, title: 'December'},
   ];
 
-  useEffect(() => {
-    getdataMovie();
-  }, []);
+  // useEffect(() => {
+  //   getdataMovie();
+  // }, []);
 
-  useEffect(() => {
-    getdataMovieRelease();
-  }, []);
+  // useEffect(() => {
+  //   getdataMovieRelease();
+  // }, []);
 
-  useEffect(() => {
-    getdataMovieRelease();
-  }, [releaseDate.date]);
+  // useEffect(() => {
+  //   getdataMovieRelease();
+  // }, [releaseDate.date]);
 
   const token = AsyncStorage.getItem('token');
 
@@ -174,7 +174,7 @@ export default function Home(props) {
             <FlatList
               horizontal
               data={month}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.number}
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.main1__month}
@@ -191,7 +191,7 @@ export default function Home(props) {
           <FlatList
             horizontal
             data={dataRelease}
-            keyExtractor={item => item.number}
+            keyExtractor={item => item.id}
             renderItem={({item}) => (
               <CardUp data={item} handleDetail={handleDetailMovie} />
             )}

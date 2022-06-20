@@ -6,9 +6,9 @@ export default function ListMovie(props) {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(10);
 
-  useEffect(() => {
-    getDataMovie();
-  }, []);
+  // useEffect(() => {
+  //   getDataMovie();
+  // }, []);
   return (
     <View>
       <Text>ListMovie</Text>
