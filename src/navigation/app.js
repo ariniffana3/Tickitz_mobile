@@ -13,6 +13,8 @@ import DrawerContent from '../component/DrawerContent';
 import Header from '../component/Header';
 import ViewAll from '../screen/ViewAll';
 import Order from '../screen/Order';
+import Counter from '../screen/Counter';
+import ListMovie from '../screen/ListMovie2';
 
 function HomeNavigator() {
   return (
@@ -90,6 +92,28 @@ export default function AppNavigator() {
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon2 name="person" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        component={Counter}
+        name="Counter"
+        options={{
+          title: 'Profile',
+          header: props => <Header {...props} />,
+          drawerIcon: ({size, color}) => (
+            <Icon2 name="code" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        component={ListMovie}
+        name="ListMovie"
+        options={{
+          title: 'Profile',
+          header: props => <Header {...props} />,
+          drawerIcon: ({size, color}) => (
+            <Icon2 name="code" size={size} color={color} />
           ),
         }}
       />

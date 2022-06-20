@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {View, Text, Image, Button} from 'react-native';
+import {View, Text, Image, Button, Alert} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
+// import axios from 'axios';
 
 function LoginScreen(props) {
   const [form, setForm] = useState({
@@ -16,44 +17,35 @@ function LoginScreen(props) {
   const handleChangeForm = (text, name) => {
     setForm({...form, [name]: text});
   };
-
+  // https://pesanfilm.herokuapp.com/
   const handleSubmit = async () => {
-    // try {
-    console.log(form);
-    const resultLogin = await axios
-      .post('auth/login', form)
-      .then(async res => {
-        setIsError(false);
-        setMessage(resultLogin.data.msg);
-        await AsyncStorage.setItem('token', resultLogin.data.data.token);
-        await AsyncStorage.setItem(
-          'refreshToken',
-          resultLogin.data.data.refreshToken,
-        );
-        await AsyncStorage.setItem(
-          'idUser',
-          JSON.stringify(resultLogin.data.data.id),
-        );
-        props.navigation.navigate('AppScreen', {screen: 'Home'});
-      })
-      .catch(error => {
-        console.log(error);
-        setIsError(true);
-        setMessage(error.response);
-        setForm({
-          email: '',
-          password: '',
-        });
-      });
-    // } catch (error) {
-    //   console.log(error);
-    //   setIsError(true);
-    //   setMessage(error.response.data.msg);
-    //   setForm({
-    //     email: '',
-    //     password: '',
-    //   });
-    // }
+    try {
+      console.log(form);
+      const resultLogin = await axios.post('auth/login', form);
+      // .then(async res => {
+      setIsError(false);
+      setMessage(resultLogin.data.msg);
+      await AsyncStorage.setItem('token', resultLogin.data.data.token);
+      await AsyncStorage.setItem(
+        'refreshToken',
+        resultLogin.data.data.refreshToken,
+      );
+      await AsyncStorage.setItem(
+        'idUser',
+        JSON.stringify(resultLogin.data.data.id),
+      );
+      props.navigation.navigate('AppScreen', {screen: 'Home'});
+      // })
+      // .catch(error => {
+      //   console.log(error);
+      //   setIsError(true);
+      //   setMessage(error.response);
+      // });
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+      alert('Failed to Login');
+    }
   };
   const signUp = () => {
     props.navigation.navigate('SignUp');

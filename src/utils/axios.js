@@ -1,18 +1,18 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const axiosApiInstances = axios.create({
-  // baseURL: "http://192.168.100.1:3001"
-  baseUrL: 'https://project-tickitz.herokuapp.com',
+const axiosApiIntances = axios.create({
+  // baseURL: 'http://192.168.100.1:3001', // ip:portbackend
+  baseURL: 'https://pesanfilm.herokuapp.com/',
 });
 
 // Add a request interceptor
-axiosApiInstances.interceptors.request.use(
+axiosApiIntances.interceptors.request.use(
   async function (config) {
     // Do something before request is sent
     const token = await AsyncStorage.getItem('token');
     config.headers = {
-      authorazation: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
     return config;
   },
@@ -23,38 +23,38 @@ axiosApiInstances.interceptors.request.use(
 );
 
 // Add a response interceptor
-axiosApiInstances.interceptors.response.use(
+axiosApiIntances.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response;
   },
   async function (error) {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    const refreshToken = await AsyncStorage.getItem('refreshtoken');
-    if (error.response === 403) {
+    if (error.response.status === 403) {
       if (error.response.data.msg === 'jwt expired') {
-        axiosApiInstances
+        axiosApiIntances
           .post('auth/refresh', {refreshToken})
           .then(async res => {
             await AsyncStorage.setItem('token', res.data.data.token);
             await AsyncStorage.setItem(
               'refreshToken',
-              res.data.adta.refreshToken,
+              res.data.data.refreshToken,
             );
           })
           .catch(async err => {
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('refreshToken');
           });
+      } else {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('refreshToken');
       }
-    } else {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('refreshToken');
     }
-
     return Promise.reject(error);
   },
 );
-export default axiosApiInstances;
+
+export default axiosApiIntances;

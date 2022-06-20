@@ -7,12 +7,10 @@ function CardUp(props) {
   return (
     <View style={styles.main1__img__hover}>
       <Image
-        source={
-          require('../assets/img/Home/Rectangle119-1.png')
-          //   image
-          //     ? `${process.env.REACT_APP_CLOUDINARY}${image}`
-          //     : 'https://www.a1hosting.net/wp-content/themes/arkahost/assets/images/default.jpg'
-        }
+        style={{width: 150, height: 255, borderRadius: 7}}
+        source={{
+          uri: `https://res.cloudinary.com/dabzupph0/image/upload/v1650965669/${image}`,
+        }}
         alt="movie"
       />
       <View>

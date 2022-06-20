@@ -8,6 +8,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import styles from '../Home/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,15 +16,21 @@ import axios from '../../utils/axios';
 import CardUp from '../../component/CardUp';
 
 export default function Home(props) {
-  const limit = 7;
+  const limit = 4;
 
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
   const [dataRelease, setDataRelease] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   let [releaseDate, setReleaseDate] = useState({
-    date: new Date().toISOString().split('T')[0].split('-')[1],
+    date: '',
   });
+  const [totalPage, setTotalPage] = useState(10);
+  const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [last, setLast] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+
   const dataUser = AsyncStorage.getItem('dataUser');
   const newData = 1;
   const month = [
@@ -41,41 +48,81 @@ export default function Home(props) {
     {number: 12, title: 'December'},
   ];
 
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, []);
-
-  // useEffect(() => {
-  //   getdataMovieRelease();
-  // }, []);
+  useEffect(() => {
+    getdataMovie();
+  }, []);
 
   useEffect(() => {
-    getdataMovieRelease();
-  }, [releaseDate.date]);
+    getdataMovie();
+  }, [releaseDate.date, page]);
 
   const token = AsyncStorage.getItem('token');
 
   const getdataMovie = async () => {
     try {
-      const resultMovie = await axios.get(
-        `movie?page=${page}&limit=${limit}&searchRelease=${releaseDate.date}`,
-      );
-      setData(resultMovie.data.data);
-      setPageInfo(resultMovie.data.pagination);
+      setRefresh(false);
+      setLoading(false);
+      setLoadMore(false);
+      if (page <= totalPage) {
+        const result = await axios.get(
+          `movie?page=${page}&limit=${limit}&searchRelease=${releaseDate.date}`,
+        );
+        setData(result.data.data);
+        setPageInfo(result.data.pagination);
+        if (page === 1) {
+          setData(result.data.data);
+        } else {
+          setData([...data, ...result.data.data]);
+        }
+        setTotalPage(result.data.pagination.totalPage);
+      } else {
+        setLast(true);
+      }
     } catch (error) {
       console.log(error.response);
     }
   };
-  const getdataMovieRelease = async () => {
-    try {
-      const resultMovie = await axios.get(
-        `movie?page=${page}&limit=${limit}&searchRelease=${releaseDate.date}`,
-      );
-      setDataRelease(resultMovie.data.data);
-      setPageInfo(resultMovie.data.pagination);
-    } catch (error) {
-      console.log(error.response);
+
+  const handleRefresh = () => {
+    console.log('REFRESH SCREEN');
+    setPage(1);
+    setLast(false);
+    if (page !== 1) {
+      setRefresh(true);
+    } else {
+      getdataMovie();
     }
+  };
+
+  const handleLoadMore = () => {
+    console.log('LOAD MORE DATA');
+    if (!loadMore) {
+      const newPage = page + 1;
+      setLoadMore(true);
+      if (newPage <= totalPage + 1) {
+        setLoading(true);
+        setPage(newPage);
+      } else {
+        setLoading(false);
+      }
+    }
+  };
+
+  const ListHeader = () => {
+    return (
+      <>
+        <Text>List Movie</Text>
+        <View style={styles.content}>
+          <View style={styles.sort}>
+            <Text>Sort</Text>
+          </View>
+          <View style={styles.search}>
+            <Text>Search</Text>
+          </View>
+        </View>
+        <Text>Filter Month</Text>
+      </>
+    );
   };
 
   const handleDetailMovie = () => {
@@ -90,7 +137,11 @@ export default function Home(props) {
     });
   };
   return (
-    <ScrollView>
+    <ScrollView
+      onRefresh={handleRefresh}
+      refreshing={refresh}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.1}>
       <View style={`${styles.main1} ${styles.addition__main1}`}>
         <View style={styles.main1__title}>
           <View style={styles.main__title__p1}>
@@ -119,32 +170,31 @@ export default function Home(props) {
             <FlatList
               horizontal
               data={month}
-              keyExtractor={item => item.number}
+              keyExtractor={item => item.name}
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.main1__month}
                   onPress={() => {
                     setReleaseDate({date: item.number});
                   }}>
-                  <Text>{item.title}</Text>
+                  <Text style={styles.main1__month__text}>{item.title}</Text>
                 </TouchableOpacity>
               )}
             />
           </View>
         </View>
-        <View style={styles.main1__img__container__hover}>
+        <View style={styles.main1__img__container__hover__viewAll}>
+          <FlatList
+            horizontal
+            data={data}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => (
+              <CardUp data={item} handleDetail={handleDetailMovie} />
+            )}
+          />
           {/* <View> */}
           {/* {dataRelease.map(item => ( */}
           {/* <li key={item.id}> */}
-          <CardUp
-          // data={item}
-          // handleDetail={handleDetailMovie}
-          // dataUser={dataUser}
-          // month={newData}
-          />
-          <CardUp />
-          <CardUp />
-          <CardUp />
           {/* </li> */}
           {/* ))} */}
           {/* </View> */}

@@ -24,6 +24,7 @@ export default function Home(props) {
   const [pageInfo, setPageInfo] = useState({});
   let [releaseDate, setReleaseDate] = useState({
     date: new Date().toISOString().split('T')[0].split('-')[1],
+    // date: 4,
   });
   const dataUser = AsyncStorage.getItem('dataUser');
   const newData = 1;
@@ -42,13 +43,13 @@ export default function Home(props) {
     {number: 12, title: 'December'},
   ];
 
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, []);
+  useEffect(() => {
+    getdataMovie();
+  }, []);
 
-  // useEffect(() => {
-  //   getdataMovieRelease();
-  // }, []);
+  useEffect(() => {
+    getdataMovieRelease();
+  }, []);
 
   useEffect(() => {
     getdataMovieRelease();
@@ -63,6 +64,7 @@ export default function Home(props) {
       );
       setData(resultMovie.data.data);
       setPageInfo(resultMovie.data.pagination);
+      console.log(data);
     } catch (error) {
       console.log(error.response);
     }
@@ -140,20 +142,20 @@ export default function Home(props) {
           </Text>
         </View>
         <View style={styles.main1__img__container__hover}>
+          <FlatList
+            horizontal
+            data={data}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => (
+              <CardUp data={item} handleDetail={handleDetailMovie} />
+            )}
+          />
           {/* <View> */}
           {/* {data.map(item => ( */}
           {/* <li key={item.id}> */}
-          <CardUp
-          // data={item}
-          // handleDetail={handleDetailMovie}
-          // dataUser={dataUser}
-          // month={newData}
-          />
-
           {/* </li> */}
           {/* ))} */}
           {/* </View> */}
-          <CardUp />
         </View>
       </View>
       <View style={`${styles.main1} ${styles.addition__main1}`}>
@@ -172,30 +174,31 @@ export default function Home(props) {
             <FlatList
               horizontal
               data={month}
-              keyExtractor={item => item.number}
+              keyExtractor={item => item.id}
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.main1__month}
                   onPress={() => {
                     setReleaseDate({date: item.number});
                   }}>
-                  <Text>{item.title}</Text>
+                  <Text style={styles.main1__month__text}>{item.title}</Text>
                 </TouchableOpacity>
               )}
             />
           </View>
         </View>
         <View style={styles.main1__img__container__hover}>
+          <FlatList
+            horizontal
+            data={dataRelease}
+            keyExtractor={item => item.number}
+            renderItem={({item}) => (
+              <CardUp data={item} handleDetail={handleDetailMovie} />
+            )}
+          />
           {/* <View> */}
           {/* {dataRelease.map(item => ( */}
           {/* <li key={item.id}> */}
-          <CardUp
-          // data={item}
-          // handleDetail={handleDetailMovie}
-          // dataUser={dataUser}
-          // month={newData}
-          />
-          <CardUp />
           {/* </li> */}
           {/* ))} */}
           {/* </View> */}
