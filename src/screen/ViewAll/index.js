@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../../utils/axios';
 import CardUp from '../../component/CardUp';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Footer from '../../component/Footer';
 
 export default function Home(props) {
   const limit = 4;
@@ -24,16 +25,19 @@ export default function Home(props) {
   const [dataRelease, setDataRelease] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   let [releaseDate, setReleaseDate] = useState({
-    date: 4,
+    date: '',
   });
   const [totalPage, setTotalPage] = useState(10);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
-  const [bogor, setBogor] = useState('Bogor');
-  const [semarang, setSemarang] = useState('Semarang');
-
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'A-Z', value: 'A-Z'},
+    {label: 'Z-A', value: 'Z-A'},
+  ]);
   const dataUser = AsyncStorage.getItem('dataUser');
   const newData = 1;
   const month = [
@@ -51,13 +55,13 @@ export default function Home(props) {
     {number: 12, title: 'December'},
   ];
 
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, []);
+  useEffect(() => {
+    getdataMovie();
+  }, []);
 
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, [releaseDate.date, page]);
+  useEffect(() => {
+    getdataMovie();
+  }, [releaseDate.date, page]);
 
   const token = AsyncStorage.getItem('token');
 
@@ -86,7 +90,6 @@ export default function Home(props) {
     }
   };
 
-  console.log(data);
   const handleRefresh = () => {
     console.log('REFRESH SCREEN');
     setPage(1);
@@ -98,7 +101,7 @@ export default function Home(props) {
     }
   };
 
-  const handleLoadMore = () => {
+  const handleViewMore = () => {
     console.log('LOAD MORE DATA');
     if (!loadMore) {
       const newPage = page + 1;
@@ -129,8 +132,9 @@ export default function Home(props) {
     );
   };
 
-  const handleDetailMovie = () => {
-    props.navigation.navigate('Detail');
+  const handleDetailMovie = id => {
+    console.log(id);
+    props.navigation.navigate('Detail', {movieId: id});
   };
   const handleViewAll = () => {
     props.navigation.navigate('ViewAll');
@@ -160,11 +164,15 @@ export default function Home(props) {
         </View>
         <View style={styles.main1__title}>
           <View style={styles.main__title__p1}>
-            {/* <DropDownPicker
-              Bogor={bogor}
-              Semarang={semarang}
-              styles={{width: 50}}
-            /> */}
+            <DropDownPicker
+              open={openDropdown}
+              value={value}
+              items={items}
+              setOpen={setOpenDropdown}
+              setValue={setValue}
+              setItems={setItems}
+              style={{width: 150}}
+            />
             <View style={styles.main1__title__p1__line} />
           </View>
 
@@ -176,7 +184,7 @@ export default function Home(props) {
         </View>
         <View style={styles.main1__month__container}>
           <View>
-            {/* <FlatList
+            <FlatList
               horizontal
               data={month}
               keyExtractor={item => item.name}
@@ -189,18 +197,20 @@ export default function Home(props) {
                   <Text style={styles.main1__month__text}>{item.title}</Text>
                 </TouchableOpacity>
               )}
-            /> */}
+            />
+            {/* <Button title="view more" onPress={handleViewMore} /> */}
           </View>
         </View>
         <View style={styles.main1__img__container__hover__viewAll}>
-          {/* <FlatList
-            horizontal
+          <FlatList
+            // horizontal
+            numColumns="2"
             data={data}
             keyExtractor={item => item.id}
             renderItem={({item}) => (
               <CardUp data={item} handleDetail={handleDetailMovie} />
             )}
-          /> */}
+          />
           {/* <View> */}
           {/* {dataRelease.map(item => ( */}
           {/* <li key={item.id}> */}
@@ -209,90 +219,7 @@ export default function Home(props) {
           {/* </View> */}
         </View>
       </View>
-      <View>
-        <View style={styles.footer__ending}>
-          <View>
-            <Image
-              source={require('../../assets/img/Home/vectortickitz2.png')}
-              alt=""
-              style={styles.footer__ending__tickitz__img}
-            />
-            <Text style={styles.footer__ending__tickitz}>
-              Stop waiting in line. Buy tickets conveniently, watch movies
-              quietly.
-            </Text>
-          </View>
-          <View style={styles.footer__ending__explore}>
-            <Text style={styles.footer__ending__explore__h3}>Explore</Text>
-            <View style={styles.footer__ending__explore__list}>
-              <Text href="" style={styles.footer__ending__explore__list__1}>
-                <Text>Home</Text>
-              </Text>
-              <Text href="" style={styles.footer__ending__explore__list__2}>
-                <Text>List Movie</Text>
-              </Text>
-            </View>
-          </View>
-          <View style={styles.footer__ending__sponsor}>
-            <Text style={styles.footer__ending__explore__h3}>Our Sponsor</Text>
-            <View style={styles.footer__ending__sponsor__list}>
-              <Image
-                source={require('../../assets/img/Home/Vector.png')}
-                alt=""
-                style={styles.footer__ending__sponsor__list__img1}
-              />
-
-              <Image
-                source={require('../../assets/img/Home/Vector-1.png')}
-                alt=""
-                style={styles.footer__ending__sponsor__list__img2}
-              />
-
-              <Image
-                source={require('../../assets/img/Home/Vector-2.png')}
-                alt=""
-                style={styles.footer__ending__sponsor__list__img3}
-              />
-            </View>
-          </View>
-          <View style={styles.footer__ending__socialMedia}>
-            <Text style={styles.footer__ending__explore__h3}>Follow us</Text>
-            <View style={styles.footer__ending__socialMedia__list}>
-              <View style={styles.footer__ending__socialMedia__list__div}>
-                <Image
-                  source={require('../../assets/img/Home/Vector-3.png')}
-                  alt=""
-                />
-                <Text href=""> Tickitz Cinema id</Text>
-              </View>
-              <View style={styles.footer__ending__socialMedia__list__div}>
-                <Image
-                  source={require('../../assets/img/Home/bx_bxl-instagram.png')}
-                  alt=""
-                />
-                <Text href="">tickitz.id</Text>
-              </View>
-              <View style={styles.footer__ending__socialMedia__list__div}>
-                <Image
-                  source={require('../../assets/img/Home/Vector-6.png')}
-                  alt=""
-                />
-                <Text href=""> tickitz.id</Text>
-              </View>
-              <View style={styles.footer__ending__socialMedia__list__div}>
-                <Image
-                  source={require('../../assets/img/Home/Group.png')}
-                  alt=""
-                />
-                <Text href="">Tickitz Cinema id</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.footer__copyright}>
-          <Text>© 2020 Tickitz. All Rights Reserved</Text>
-        </View>
-      </View>
+      <Footer />
     </ScrollView>
   );
 }

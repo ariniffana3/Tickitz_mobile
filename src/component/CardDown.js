@@ -21,17 +21,17 @@ function CardDown(props) {
       </View>
       {props.isPageManageMovie ? (
         <View>
-          <Button color="#5F2EEA" onClick={() => props.setUpdate(props.data)}>
+          <Button color="#5F2EEA" onPress={() => props.setUpdate(props.data)}>
             update
           </Button>
-          <Button color="#5F2EEA" onClick={() => props.handleDelete(id)}>
+          <Button color="#5F2EEA" onPress={() => props.handleDelete(id)}>
             delete
           </Button>
         </View>
       ) : (
         <Button
           color="#5F2EEA"
-          onClick={() => props.handleDetail(id)}
+          onPress={() => props.handleDetail(id)}
           title="Details"
         />
       )}

@@ -23,7 +23,7 @@ function CardUp(props) {
       </View>
       <Button
         style={styles.hover}
-        onClick={() => props.handleDetail(id)}
+        onPress={() => props.handleDetail(id)}
         title="Details"
         color="#5F2EEA">
         Details

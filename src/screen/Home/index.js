@@ -43,17 +43,17 @@ export default function Home(props) {
     {number: 12, title: 'December'},
   ];
 
-  // useEffect(() => {
-  //   getdataMovie();
-  // }, []);
+  useEffect(() => {
+    getdataMovie();
+  }, []);
 
-  // useEffect(() => {
-  //   getdataMovieRelease();
-  // }, []);
+  useEffect(() => {
+    getdataMovieRelease();
+  }, []);
 
-  // useEffect(() => {
-  //   getdataMovieRelease();
-  // }, [releaseDate.date]);
+  useEffect(() => {
+    getdataMovieRelease();
+  }, [releaseDate.date]);
 
   const token = AsyncStorage.getItem('token');
 
@@ -81,8 +81,9 @@ export default function Home(props) {
     }
   };
 
-  const handleDetailMovie = () => {
-    props.navigation.navigate('Detail');
+  const handleDetailMovie = id => {
+    console.log(id);
+    props.navigation.navigate('Detail', {movieId: id});
   };
   const handleViewAll = () => {
     props.navigation.navigate('ViewAll');
