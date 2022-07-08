@@ -21,6 +21,8 @@ export default function Home(props) {
   const limit = 4;
 
   const [page, setPage] = useState(1);
+  const [sort, setsort] = useState('');
+  const [tempSearch, setTempSearch] = useState('');
   const [data, setData] = useState([]);
   const [dataRelease, setDataRelease] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
@@ -35,9 +37,10 @@ export default function Home(props) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'A-Z', value: 'A-Z'},
-    {label: 'Z-A', value: 'Z-A'},
+    {label: 'A-Z', value: 'name ASC'},
+    {label: 'Z-A', value: 'name DESC'},
   ]);
+  const [search, setSearch] = useState('');
   const dataUser = AsyncStorage.getItem('dataUser');
   const newData = 1;
   const month = [
@@ -61,9 +64,7 @@ export default function Home(props) {
 
   useEffect(() => {
     getdataMovie();
-  }, [releaseDate.date, page]);
-
-  const token = AsyncStorage.getItem('token');
+  }, [releaseDate.date, page, sort, search]);
 
   const getdataMovie = async () => {
     try {
@@ -72,7 +73,7 @@ export default function Home(props) {
       setLoadMore(false);
       if (page <= totalPage) {
         const result = await axios.get(
-          `movie?page=${page}&limit=${limit}&searchRelease=${releaseDate.date}`,
+          `movie?page=${page}&limit=${limit}&searchRelease=${releaseDate.date}&sort=${sort}&searchName=${search}`,
         );
         setData(result.data.data);
         setPageInfo(result.data.pagination);
@@ -114,22 +115,12 @@ export default function Home(props) {
       }
     }
   };
-
-  const ListHeader = () => {
-    return (
-      <>
-        <Text>List Movie</Text>
-        <View style={styles.content}>
-          <View style={styles.sort}>
-            <Text>Sort</Text>
-          </View>
-          <View style={styles.search}>
-            <Text>Search</Text>
-          </View>
-        </View>
-        <Text>Filter Month</Text>
-      </>
-    );
+  const onSelectItem = item => {
+    setsort(item.value);
+  };
+  // {nativeEvent: {key: keyValue}}
+  const handleSearch = text => {
+    setSearch(text);
   };
 
   const handleDetailMovie = id => {
@@ -139,11 +130,7 @@ export default function Home(props) {
   const handleViewAll = () => {
     props.navigation.navigate('ViewAll');
   };
-  const Login = () => {
-    props.navigation.navigate('AuthScreen', {
-      screen: 'Login',
-    });
-  };
+
   return (
     <ScrollView
     // onRefresh={handleRefresh}
@@ -169,6 +156,7 @@ export default function Home(props) {
               value={value}
               items={items}
               setOpen={setOpenDropdown}
+              onSelectItem={onSelectItem}
               setValue={setValue}
               setItems={setItems}
               style={{width: 150}}
@@ -177,8 +165,7 @@ export default function Home(props) {
           </View>
 
           <TextInput
-            href=""
-            onPress={handleViewAll}
+            onChangeText={handleSearch}
             placeholder="Search Movie..."
           />
         </View>
@@ -201,7 +188,7 @@ export default function Home(props) {
             {/* <Button title="view more" onPress={handleViewMore} /> */}
           </View>
         </View>
-        <View style={styles.main1__img__container__hover__viewAll}>
+        <View style={styles.main1__img__container__hover__viewall}>
           <FlatList
             // horizontal
             numColumns="2"

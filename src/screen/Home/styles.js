@@ -65,6 +65,12 @@ export default StyleSheet.create({
     paddingBottom: 30,
     flexDirection: 'row',
   },
+  main1__img__container__hover: {
+    marginTop: 20,
+  },
+  main1__img__container__hover__viewall: {
+    marginTop: 20,
+  },
   main1__img__hover: {
     // height: 370,
     width: 200,
