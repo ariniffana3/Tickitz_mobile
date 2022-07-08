@@ -5,7 +5,7 @@ const initialState = {
   msg: '',
 };
 
-const counter = (state = initialState, action) => {
+const profile = (state = initialState, action) => {
   switch (action.type) {
     case 'PROFILE_FULFILLED': {
       return {
@@ -23,7 +23,8 @@ const counter = (state = initialState, action) => {
         isError: false,
       };
     }
-    case 'PROFILE_REJECT': {
+    case 'PROFILE_REJECTED': {
+      console.log(action.data);
       return {
         ...state,
         isLoading: false,
@@ -38,4 +39,4 @@ const counter = (state = initialState, action) => {
   }
 };
 
-export default counter;
+export default profile;

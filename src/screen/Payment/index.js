@@ -5,13 +5,16 @@ import {useSelector, useDispatch} from 'react-redux';
 import Footer from '../../component/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, Image, ScrollView, Text, TextInput, View} from 'react-native';
+import {dataUser} from '../../stores/actions/profile';
 
 function Payment(props) {
-  const [dataUser, setDataUser] = useState([]);
+  // const [dataUser, setDataUser] = useState([]);
   const [dataUserStorage, setDataUserStorage] = useState([]);
   const dataOrder = props.route.params;
   console.log(JSON.stringify(dataOrder));
-  const user = useSelector(state => state.user);
+  let user = useSelector(state => state.profile);
+  user = user.data[0];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getdataUser();
@@ -22,17 +25,16 @@ function Payment(props) {
   // useEffect(() => {
   //   console.log("useEffect")
   // },[]);
-  const getdata = async () => {
-    try {
-      // console.log('tess')
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      // const resultSchedule = await axios.get(`user/4`);
-      // setDataUser(resultSchedule.data.data);
-      console.log('error');
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
+  // const getdata = async () => {
+  //   try {
+  //     // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  //     // const resultSchedule = await axios.get(`user/${idUser}`);
+  //     // setDataUser(resultSchedule.data.data);
+  //     console.log('error');
+  //   } catch (error) {
+  //     console.log(error.response);
+  //   }
+  // };
 
   // const token = localStorage.getItem("token");
   // dataUserStorage = AsyncStorage.getItem('dataUser');
@@ -40,6 +42,9 @@ function Payment(props) {
   // console.log(dataUserStorage.id);
   const getdataUser = async () => {
     try {
+      const idUser = await AsyncStorage.getItem('idUser');
+      console.log(idUser);
+      await dispatch(dataUser(idUser));
       // console.log('tess')
       // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       // const resultSchedule = await axios.get(`user/${dataUserStorage.id}`);
@@ -70,7 +75,9 @@ function Payment(props) {
       <View style={styles.payment__main}>
         <View style={styles.main__info__price}>
           <Text>Total payment</Text>
-          {/* <Text style={styles.main__info__price__h4}>{state.price} IDR</Text> */}
+          <Text style={styles.main__info__price__h4}>
+            {dataOrder.price} IDR
+          </Text>
         </View>
         <View style={styles.main__personal}>
           <Text style={styles.main__personal__h3}>Personal Info</Text>
@@ -83,7 +90,9 @@ function Payment(props) {
                 type="text"
                 style={`form-control ${styles.main__personal__input}`}
                 id="exampleInputFirstName1"
-                value={`${dataUser.firstName}  ${dataUser.lastName}`}
+                value={`${user ? user.firstName : ''}  ${
+                  user ? user.lastName : ''
+                }`}
                 readOnly
               />
             </View>
@@ -95,7 +104,7 @@ function Payment(props) {
                 type="email"
                 style={`form-control ${styles.main__personal__input}`}
                 id="exampleInputEmail1"
-                value={`${dataUser.email}`}
+                value={`${user ? user.email : ''}`}
                 readOnly
               />
             </View>
@@ -111,7 +120,7 @@ function Payment(props) {
                   type="tel"
                   style={`form-control ${styles.form__control__telp}`}
                   id="exampleInputPhone1"
-                  value={`${dataUser.noTelp}`}
+                  value={`${user ? user.noTelp : ''}`}
                   aria-describedby="addon-wrapping"
                   disabled
                 />

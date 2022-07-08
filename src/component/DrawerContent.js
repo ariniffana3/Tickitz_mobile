@@ -1,15 +1,35 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import {useSelector, useDispatch} from 'react-redux';
+import {dataUser} from '../stores/actions/profile';
 
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function DrawerContent(props) {
+  let user = useSelector(state => state.profile);
+  user = user.data[0];
+  console.log(user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getdataUser();
+  }, []);
+  const getdataUser = async () => {
+    try {
+      const idUser = await AsyncStorage.getItem('idUser');
+      console.log(idUser);
+      await dispatch(dataUser(idUser));
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       alert('Logout');
@@ -23,10 +43,19 @@ function DrawerContent(props) {
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
         <View style={styles.containerProfile}>
-          <View style={styles.avatar} />
+          <View style={styles.avatar}>
+            <Image
+              source={{
+                uri: `https://res.cloudinary.com/dabzupph0/image/upload/v1650965669/${user.image}`,
+              }}
+            />
+          </View>
           <View style={styles.biodata}>
-            <Text style={styles.title}>Anonymous</Text>
-            <Text style={styles.caption}>@bagustea</Text>
+            <Text
+              style={styles.title}>{`${user.firstName} ${user.lastName}`}</Text>
+            <Text style={styles.caption}>
+              @{`${user.firstName}${user.lastName}`}
+            </Text>
           </View>
         </View>
         <DrawerItemList {...props} />

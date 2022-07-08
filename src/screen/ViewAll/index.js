@@ -16,14 +16,15 @@ import axios from '../../utils/axios';
 import CardUp from '../../component/CardUp';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Footer from '../../component/Footer';
+import Icon from 'react-native-vector-icons/Feather';
 
 export default function Home(props) {
   const limit = 4;
 
   const [page, setPage] = useState(1);
-  const [sort, setsort] = useState('');
-  const [tempSearch, setTempSearch] = useState('');
+  const [sort, setsort] = useState('name ASC');
   const [data, setData] = useState([]);
+  const [tempSearch, setTempSearch] = useState('');
   const [dataRelease, setDataRelease] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   let [releaseDate, setReleaseDate] = useState({
@@ -77,12 +78,18 @@ export default function Home(props) {
         );
         setData(result.data.data);
         setPageInfo(result.data.pagination);
+        setTotalPage(result.data.pagination.totalPage);
         if (page === 1) {
           setData(result.data.data);
         } else {
           setData([...data, ...result.data.data]);
         }
-        setTotalPage(result.data.pagination.totalPage);
+
+        if (page === result.data.pagination.totalPage) {
+          setLast(true);
+        } else {
+          setLast(false);
+        }
       } else {
         setLast(true);
       }
@@ -104,25 +111,31 @@ export default function Home(props) {
 
   const handleViewMore = () => {
     console.log('LOAD MORE DATA');
-    if (!loadMore) {
-      const newPage = page + 1;
-      setLoadMore(true);
-      if (newPage <= totalPage + 1) {
-        setLoading(true);
-        setPage(newPage);
-      } else {
-        setLoading(false);
-      }
-    }
+    const newPage = page + 1;
+    setPage(newPage);
+    // if (!loadMore) {
+    //   const newPage = page + 1;
+    //   setLoadMore(true);
+    //   if (newPage <= totalPage + 1) {
+    //     setLoading(true);
+    //     setPage(newPage);
+    //   } else {
+    //     setLoading(false);
+    //   }
+    // }
   };
   const onSelectItem = item => {
+    setPage(1);
     setsort(item.value);
   };
   // {nativeEvent: {key: keyValue}}
   const handleSearch = text => {
-    setSearch(text);
+    setTempSearch(text);
   };
-
+  const handlePressSearch = () => {
+    setPage(1);
+    setSearch(tempSearch);
+  };
   const handleDetailMovie = id => {
     console.log(id);
     props.navigation.navigate('Detail', {movieId: id});
@@ -140,14 +153,10 @@ export default function Home(props) {
     >
       <View style={`${styles.main1} ${styles.addition__main1}`}>
         <View style={styles.main1__title}>
-          <View style={styles.main__title__p1}>
-            <Text>Upcoming Movie</Text>
+          <View>
+            <Text style={{fontSize: 17}}>Upcoming Movie</Text>
             <View style={styles.main1__title__p1__line} />
           </View>
-
-          <Text href="" onPress={handleViewAll}>
-            view all
-          </Text>
         </View>
         <View style={styles.main1__title}>
           <View style={styles.main__title__p1}>
@@ -163,11 +172,19 @@ export default function Home(props) {
             />
             <View style={styles.main1__title__p1__line} />
           </View>
-
-          <TextInput
-            onChangeText={handleSearch}
-            placeholder="Search Movie..."
-          />
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <TextInput
+              onChangeText={handleSearch}
+              placeholder="Search Movie..."
+            />
+            <Text onPress={handlePressSearch}>
+              <Icon name="search" color="black" />
+            </Text>
+          </View>
         </View>
         <View style={styles.main1__month__container}>
           <View>
@@ -198,12 +215,17 @@ export default function Home(props) {
               <CardUp data={item} handleDetail={handleDetailMovie} />
             )}
           />
-          {/* <View> */}
-          {/* {dataRelease.map(item => ( */}
-          {/* <li key={item.id}> */}
-          {/* </li> */}
-          {/* ))} */}
-          {/* </View> */}
+          {!last ? (
+            <View style={{width: 120, marginLeft: 'auto', marginRight: 'auto'}}>
+              <Button
+                title="load more"
+                onPress={handleViewMore}
+                color="#5F2EEA"
+              />
+            </View>
+          ) : (
+            <View />
+          )}
         </View>
       </View>
       <Footer />
