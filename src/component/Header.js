@@ -6,12 +6,17 @@ export default function Header(props) {
   const openDrawer = () => {
     props.navigation.openDrawer();
   };
+  const Home = () => {
+    console.log('click home');
+    props.navigation.navigate('AppScreen', {screen: 'Home'});
+  };
   return (
     <View style={styles.header}>
-      <View>
+      <View onPress={Home}>
         <Image
           source={require('../assets/img/Home/vectortickitz2.png')}
           style={styles.header__logo}
+          onPress={Home}
         />
       </View>
       <TouchableOpacity>

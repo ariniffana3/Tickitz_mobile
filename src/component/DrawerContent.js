@@ -16,22 +16,13 @@ function DrawerContent(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [firstRender, setFirstRender] = useState(true);
 
-  console.log('drawer content running');
   useEffect(() => {
     getdataUser();
-    console.log('useEffect running');
   }, []);
-  useEffect(() => {
-    console.log('useeffect 2 is running');
-  }, []);
-  // if (firstRender) {
-  //   getdataUser();
-  // }
+
   const getdataUser = async () => {
     try {
-      console.log('getdatauser running');
       const idUser = await AsyncStorage.getItem('idUser');
-      console.log(idUser, 'id');
       await dispatch(dataUser(idUser));
       setFirstRender(false);
     } catch (error) {
@@ -43,12 +34,6 @@ function DrawerContent(props) {
   if (!user.isLoading) {
     user = user.data[0];
   }
-  // if (!user.isLoading && !user.isError) {
-
-  // } else {
-  console.log(user);
-  // }
-  // }
 
   const handleLogout = async () => {
     try {

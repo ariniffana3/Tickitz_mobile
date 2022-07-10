@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {WebView} from 'react-native-webview';
+import {useSelector} from 'react-redux';
 
 export default function Midtrans(props) {
-  const uri = props.route.params;
+  let dataBooking = useSelector(state => state.booking);
+  console.log(dataBooking);
   return (
     <WebView
       source={{
-        uri: `${uri}`,
+        uri: `${dataBooking.data.redirectUrl}`,
       }}
       //   style={{marginTop: 20}}
     />

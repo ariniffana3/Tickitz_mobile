@@ -3,27 +3,14 @@ import styles from '../screen/Detail/styles';
 import {Button, Image, Text, TouchableOpacity, View} from 'react-native';
 
 function CardSchedule(props) {
-  console.log(props);
   let {id, premiere, price, location, time} = props.data;
-  const timeDefault = [
-    '08:30am',
-    '10:00am',
-    '12:00pm',
-    '02:00pm',
-    '04:00pm',
-    '06:00pm',
-    '08:00pm',
-  ];
-  const item = ['08:30am', '10:00am', '12:00pm'];
+
   time = time.split('');
   time.pop();
   time.shift();
   time = time.join('');
   time = time.split(',');
 
-  // const mapping =()=>{
-  //   time.map((item)=>{ item !== itemDefault? styles.young__grey : itemDefault === clicking? styles.purle :styles.old__grey})
-  // }
   return (
     <>
       <View style={styles.section__cinemaBox__cinema}>
@@ -57,30 +44,26 @@ function CardSchedule(props) {
       </View>
       <View style={styles.section__cinemaBox__time}>
         {time.map(itemDefault => (
-          //  for(a=1;a<time.length;a++){
-          // itemDefault == time.map((item)=> {return item}) ? console.log("berhasil"): console.log("2");
-          //  }
-          //  time.forEach((item)=>{
-
           <TouchableOpacity
             key={itemDefault}
-            // item !== itemDefault? styles.young__grey : itemDefault === clicking? styles.purle :styles.old__grey
-            // //time.map((item)=> {if (itemDefault == item){return `${styles.dark__grey}` }
-            // return `${styles.young__grey}`}
-            // itemDefault == "08:30am" ? styles.dark__grey: styles.young__grey
             style={
               itemDefault === props.dataOrder.time &&
-              id === props.dataOrder.idOrder
+              id === props.dataOrder.scheduleId
                 ? styles.purple
                 : styles.dark__grey
             }
             onPress={() =>
-              props.changeDataOrder({...props.data, time: itemDefault})
+              props.changeDataOrder({
+                time: itemDefault,
+                scheduleId: id,
+                price: price,
+                premiere: premiere,
+              })
             }>
             <Text
               style={
                 itemDefault === props.dataOrder.time &&
-                id === props.dataOrder.idOrder
+                id === props.dataOrder.scheduleId
                   ? styles.purple
                   : styles.dark__grey
               }>
@@ -97,12 +80,11 @@ function CardSchedule(props) {
         </Text>
       </View>
       <Button
-        // style={`styles.button__book `}
         style="btn btn-primary"
-        //id == dataOrder.idOrder ? : false
-        disabled={id !== props.dataOrder.idOrder ? true : false}
+        disabled={id !== props.dataOrder.scheduleId ? true : false}
         onPress={props.handleOrder}
         title="Book Now"
+        color="#5F2EEA"
       />
     </>
   );

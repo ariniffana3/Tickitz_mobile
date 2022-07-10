@@ -1,9 +1,9 @@
 import axios from '../../utils/axios';
 
 export const dataUser = id => {
-  console.log(typeof id);
+  id = id.split('')[1];
   return {
     type: 'PROFILE',
-    payload: axios.get('user/4'),
+    payload: axios.get(`user/${id}`),
   };
 };

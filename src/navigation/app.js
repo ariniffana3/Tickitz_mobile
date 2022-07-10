@@ -14,10 +14,10 @@ import Header from '../component/Header';
 import ViewAll from '../screen/ViewAll';
 import Order from '../screen/Order';
 import Counter from '../screen/Counter';
-import ListMovie from '../screen/ListMovie2';
 import Detail from '../screen/Detail';
 import Payment from '../screen/Payment';
 import Midtrans from '../screen/Midtrans';
+import Profile from '../screen/Profile';
 
 function HomeNavigator() {
   return (
@@ -60,25 +60,25 @@ function HomeNavigator() {
     </Stack.Navigator>
   );
 }
-// function ProfileNavigator() {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen
-//         component={Order}
-//         name="Order"
-//         options={{
-//           headerShown: false,
-//         }}
-//       />
-//     </Stack.Navigator>
-//   );
-// }
 function ViewAllNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
         component={ViewAll}
         name="ViewAll"
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+function ProfileNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        component={Profile}
+        name="Profile"
         options={{
           headerShown: false,
         }}
@@ -115,45 +115,17 @@ export default function AppNavigator() {
           ),
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         component={ProfileNavigator}
-        name="Order"
+        name="Profile"
         options={{
-          title: 'Order',
+          title: 'Profile',
           header: props => <Header {...props} />,
           drawerIcon: ({size, color}) => (
             <Icon2 name="person" size={size} color={color} />
-          ),
-        }}
-      /> */}
-      <Drawer.Screen
-        component={Counter}
-        name="Counter"
-        options={{
-          title: 'Profile',
-          header: props => <Header {...props} />,
-          drawerIcon: ({size, color}) => (
-            <Icon2 name="code" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        component={ListMovie}
-        name="ListMovie"
-        options={{
-          title: 'Profile',
-          header: props => <Header {...props} />,
-          drawerIcon: ({size, color}) => (
-            <Icon2 name="code" size={size} color={color} />
           ),
         }}
       />
     </Drawer.Navigator>
   );
 }
-// apa itu expo
-// cara menambahkan logic kedalam properti yang ada di tag react-native
-// menampilkan pesan error
-// error di view all
-// input email
-// parsing data di detail

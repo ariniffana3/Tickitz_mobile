@@ -5,9 +5,9 @@ const initialState = {
   msg: '',
 };
 
-const profile = (state = initialState, action) => {
+const booking = (state = initialState, action) => {
   switch (action.type) {
-    case 'PROFILE_FULFILLED': {
+    case 'BOOKING_FULFILLED': {
       return {
         ...state,
         isLoading: false,
@@ -16,14 +16,15 @@ const profile = (state = initialState, action) => {
         msg: action.payload.data.msg,
       };
     }
-    case 'PROFILE_PENDING': {
+    case 'BOOKING_PENDING': {
       return {
         ...state,
         isLoading: true,
         isError: false,
       };
     }
-    case 'PROFILE_REJECTED': {
+    case 'BOOKING_REJECTED': {
+      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
@@ -38,4 +39,4 @@ const profile = (state = initialState, action) => {
   }
 };
 
-export default profile;
+export default booking;

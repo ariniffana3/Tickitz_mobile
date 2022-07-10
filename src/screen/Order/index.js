@@ -1,13 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  FlatList,
-  ScrollView,
-  Image,
-} from 'react-native';
+import {View, Text, Button, FlatList, ScrollView, Image} from 'react-native';
 import Seat from '../../component/Seat';
 import Footer from '../../component/Footer';
 import styles from './styles';
@@ -17,52 +9,30 @@ function Order(props) {
   const [selectedSeat, setSelectedSeat] = useState([]);
   const [reservedSeat, setReservedSeat] = useState(['A1', 'C7']);
   const [bookedSeat, setBookedSeat] = useState([]);
-  // console.log(props.route.params, 'a');
-  const state = props.route.params;
-  // console.log(state, 'b');
-  // console.log(bookedSeat);
-  useEffect(() => {
-    console.log('order screen');
-    console.log(props.route.params);
-  }, []);
-  console.log(state);
-  const handleSelectedSeat = data => {
-    setBookedSeat([...bookedSeat, data]);
+  const [state, setState] = useState(props.route.params);
+
+  const handleSelectedSeat = async data => {
+    await setBookedSeat([...bookedSeat, data]);
     if (selectedSeat.includes(data)) {
       const deleteSeat = selectedSeat.filter(el => {
         return el !== data;
       });
-      setSelectedSeat(deleteSeat);
-      setBookedSeat(deleteSeat);
+      await setSelectedSeat(deleteSeat);
+      await setBookedSeat(deleteSeat);
     } else {
-      setSelectedSeat([...selectedSeat, data]);
+      await setSelectedSeat([...selectedSeat, data]);
     }
   };
 
-  const handleResetSeat = () => {
-    setSelectedSeat([]);
-  };
-
-  const handleBookingSeat = () => {
-    console.log(selectedSeat);
-  };
-  const handleSelectSeat = seat => {
-    setBookedSeat([...bookedSeat, seat]);
-    // console.log(seat);
-    if (selectedSeat.includes(seat)) {
-      const deleteSeat = selectedSeat.filter(el => {
-        return el !== seat;
-      });
-      setSelectedSeat(deleteSeat);
-      setBookedSeat(deleteSeat);
-    } else {
-      setSelectedSeat([...selectedSeat, seat]);
-    }
-  };
   const Home = () => {
     props.navigation.navigate('Home');
   };
-  const handleOrder = () => {
+  const handleOrder = async () => {
+    await setState({
+      ...state,
+      seat: bookedSeat,
+      totalPrice: state.price * bookedSeat.length,
+    });
     props.navigation.navigate('Payment', {...state});
   };
   return (
@@ -74,15 +44,12 @@ function Order(props) {
             <Text style={styles.order__main__h4}>
               {state ? state.movieName : 'Luca'}
             </Text>
-            <Button onPress={Home} title="Change movie" />
+            <Button onPress={Home} title="Change movie" color="#5F2EEA" />
           </View>
         </View>
         <View style={styles.main__seat}>
           <Text style={styles.order__main__h3}>Choose Your Seat</Text>
           <View style={styles.main__seat__container}>
-            {/* <View style="main_seat_container">
-              <p>screen</p>
-            </View> */}
             <View style={`card ${styles.card}`}>
               <View style={styles.containerSeat}>
                 <FlatList
@@ -99,7 +66,6 @@ function Order(props) {
                 />
               </View>
             </View>
-            {/* <img src="/img/Untitled.png" alt="" /> */}
           </View>
         </View>
       </View>
@@ -151,7 +117,11 @@ function Order(props) {
             <View style={styles.main__order__info__1}>
               <Text>Seat choosed</Text>
               <Text style={styles.main__order__info__1__h4}>
-                {bookedSeat ? bookedSeat.map(i => `${i}, `) : ''}
+                {bookedSeat
+                  ? bookedSeat.map((i, index) =>
+                      index === bookedSeat.length - 1 ? i : `${i}, `,
+                    )
+                  : ''}
               </Text>
             </View>
           </View>
@@ -164,30 +134,15 @@ function Order(props) {
         </View>
       </View>
       <View style={styles.main__seat__button}>
-        {/* <Button onPress={Home} title="Change your movie" /> */}
-        <Button onPress={handleOrder} title="Checkout now" />
+        <Button
+          onPress={handleOrder}
+          disabled={bookedSeat.length === 0 ? true : false}
+          title="Checkout now"
+          color="#5F2EEA"
+        />
       </View>
       <Footer />
     </ScrollView>
-    // <View style={styles.container}>
-    //   <Text>Order Screen</Text>
-    //   <View style={styles.containerSeat}>
-    //     <FlatList
-    //       data={listSeat}
-    //       keyExtractor={item => item}
-    //       renderItem={({item}) => (
-    //         <Seat
-    //           seatAlphabhet={item}
-    //           reserved={reservedSeat}
-    //           selected={selectedSeat}
-    //           selectSeat={handleSelectedSeat}
-    //         />
-    //       )}
-    //     />
-    //   </View>
-    //   <Button title="Booking" color="#5F2EEA" onPress={handleBookingSeat} />
-    //   <Button title="Reset" color="#5F2EEA" onPress={handleResetSeat} />
-    // </View>
   );
 }
 

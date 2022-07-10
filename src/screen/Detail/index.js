@@ -10,14 +10,10 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 
 export default function Detail(props) {
-  const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
-  const [pageInfo, setPageInfo] = useState({});
   const [dataSchedule, setDataSchedule] = useState([]);
   const [pageInfoSchedule, setPageInfoSchedule] = useState({});
-  const [dataRilis, setDataRilis] = useState({});
   const [location, setLocation] = useState([]);
-  const [dateNow, setDateNow] = useState(moment(new Date()).format('L'));
   const [openDropdown, setOpenDropdown] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -27,37 +23,30 @@ export default function Detail(props) {
   ]);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
+  const [dataOrder, setDataOrder] = useState({
+    movieId: props.route.params.movieId,
+    dateBooking: moment(new Date()).format('MMM Do YY'),
+  });
   useEffect(() => {
     getMovieId();
-  }, []);
-  //   useEffect(() => {
-  //     getMovieId();
-  //   }, [page]);
-  useEffect(() => {
-    getdataSchedule();
   }, []);
   useEffect(() => {
     getdataSchedule();
   }, [location]);
-  // useEffect(() => {
-  console.log(props.route.params);
-  // }, []);
 
-  const token = AsyncStorage.getItem('token');
+  console.log(props.route.params);
+
   const getMovieId = async () => {
     try {
       const resultMovieId = await axios.get(
         `movie/${props.route.params.movieId}`,
       );
       setData(resultMovieId.data.data[0]);
-      // setDataRilis(data.releaseDate);
-      // setDataRilis(moment(dataRilis).format("MMM Do YY"));
+      setDataOrder({...dataOrder, movieName: resultMovieId.data.data[0].name});
     } catch (error) {
       console.log(error.response);
     }
   };
-  console.log(data.image);
   const getdataSchedule = async () => {
     try {
       const resultSchedule = await axios.get(
@@ -70,52 +59,25 @@ export default function Detail(props) {
     }
   };
 
-  const [dataOrder, setDataOrder] = useState({
-    idOrder: '',
-    movieId: props.route.params.movieId,
-    movieName: data.name,
-    // userId: state.userId,
-    dateBooking: moment(new Date()).format('MMM Do YY'),
-    time: '',
-    price: '',
-  });
+  const changeDataOrder = datachange => {
+    setDataOrder({
+      ...dataOrder,
+      ...datachange,
+    });
+  };
 
   const handleOrder = () => {
     props.navigation.navigate('Order', {
-      // id: 1,
+      ...dataOrder,
+    });
+  };
 
-      ...dataOrder,
-    });
-    console.log(dataOrder);
-    console.log('handle order');
-  };
-  const changeDataOrder = data => {
-    console.log(data);
-    setDataOrder({
-      ...dataOrder,
-      idOrder: data.id,
-      time: data.time,
-      price: data.price,
-      premiere: data.premiere,
-      movieName: data.name,
-    });
-  };
-  const Home = () => {
-    props.navigation.navigate('Home');
-  };
-  // const additionData = {
-  //   ...state,
-  //   name: data.name,
-  //   userId: state.userId,
-  //   dateBooking: moment(new Date()).format("MMM Do YY"),
-  // };
-  const handleLocation = e => {
-    setLocation(e.target.value);
+  const handleLocation = item => {
+    setLocation(item.value);
   };
   data.defaultProps = {
     releaseDate: 'default',
   };
-  console.log(location);
   return (
     <ScrollView style={styles.container}>
       <View key={data.name} style={styles.detail__main}>
@@ -178,6 +140,7 @@ export default function Detail(props) {
             value={value}
             items={items}
             setOpen={setOpenDropdown}
+            onSelectItem={handleLocation}
             setValue={setValue}
             setItems={setItems}
             style={{width: 150}}
