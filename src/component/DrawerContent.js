@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {
   DrawerContentScrollView,
@@ -12,23 +12,43 @@ import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function DrawerContent(props) {
-  let user = useSelector(state => state.profile);
-  user = user.data[0];
-  console.log(user);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [firstRender, setFirstRender] = useState(true);
 
+  console.log('drawer content running');
   useEffect(() => {
     getdataUser();
+    console.log('useEffect running');
   }, []);
+  useEffect(() => {
+    console.log('useeffect 2 is running');
+  }, []);
+  // if (firstRender) {
+  //   getdataUser();
+  // }
   const getdataUser = async () => {
     try {
+      console.log('getdatauser running');
       const idUser = await AsyncStorage.getItem('idUser');
-      console.log(idUser);
+      console.log(idUser, 'id');
       await dispatch(dataUser(idUser));
+      setFirstRender(false);
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
+  // if (!isLoading) {
+  let user = useSelector(state => state.profile);
+  if (!user.isLoading) {
+    user = user.data[0];
+  }
+  // if (!user.isLoading && !user.isError) {
+
+  // } else {
+  console.log(user);
+  // }
+  // }
 
   const handleLogout = async () => {
     try {
@@ -46,15 +66,23 @@ function DrawerContent(props) {
           <View style={styles.avatar}>
             <Image
               source={{
-                uri: `https://res.cloudinary.com/dabzupph0/image/upload/v1650965669/${user.image}`,
+                uri: `${
+                  user
+                    ? user.image
+                      ? `https://res.cloudinary.com/dabzupph0/image/upload/v1650965669/${user.image}`
+                      : 'https://www.iconsdb.com/icons/preview/gray/user-4-xxl.png'
+                    : 'https://www.iconsdb.com/icons/preview/gray/user-4-xxl.png'
+                }`,
               }}
+              style={{width: 40, height: 40}}
             />
           </View>
           <View style={styles.biodata}>
-            <Text
-              style={styles.title}>{`${user.firstName} ${user.lastName}`}</Text>
+            <Text style={styles.title}>{`${user ? user.firstName : ''} ${
+              user ? user.lastName : ''
+            }`}</Text>
             <Text style={styles.caption}>
-              @{`${user.firstName}${user.lastName}`}
+              @{`${user ? user.firstName : ''}${user ? user.lastName : ''}`}
             </Text>
           </View>
         </View>
@@ -87,6 +115,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 40,
     backgroundColor: 'gray',
+    overflow: 'hidden',
   },
   biodata: {
     marginLeft: 15,

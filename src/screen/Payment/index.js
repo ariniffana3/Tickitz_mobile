@@ -64,8 +64,8 @@ function Payment(props) {
   };
   const handleOrder = async () => {
     try {
-      // const result = await axios.post('booking', state);
-      // props.navigation.navigate('Midtrans', {link: result.redirectUrl});
+      const result = await axios.post('booking', dataOrder);
+      props.navigation.navigate('Midtrans', {link: result.redirectUrl});
     } catch (error) {
       alert('Failed to Process');
     }
