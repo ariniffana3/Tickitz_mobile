@@ -87,6 +87,7 @@ function LoginScreen(props) {
                       style={styles.form__control}
                       placeholder="Write your email"
                       required
+                      keyboardType="email-address"
                     />
                   </View>
                   <View>
