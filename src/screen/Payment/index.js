@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Footer from '../../component/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, Image, ScrollView, Text, TextInput, View} from 'react-native';
-import {dataUser} from '../../stores/actions/profile';
+import dataUser from '../../stores/actions/profile';
 import {booking} from '../../stores/actions/booking';
 import moment from 'moment';
 

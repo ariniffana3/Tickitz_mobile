@@ -14,22 +14,19 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {dataUser} from '../../stores/actions/profile';
-import {booking} from '../../stores/actions/booking';
-import moment from 'moment';
+import getDataUser from '../../stores/actions/profile';
 import History from '../../component/History';
 
 function Profile(props) {
-  const [dataUserStorage, setDataUserStorage] = useState([]);
-  // const [user, setUser] = useState(useSelector(state => state.profile));
   const dispatch = useDispatch();
   const [isHistory, setIsHistory] = useState(false);
   const [dataHistory, setDatahistory] = useState([]);
-  let user = useSelector(state => state.profile);
-  user = user.data[0];
-  const [form, setForm] = useState({...user});
-  const [tempForm, setTempForm] = useState({...user});
-  const [formPassword, setFormPassword] = useState({});
+  const dataUser = useSelector(state => state.profile.data[0]);
+  const [form, setForm] = useState({...dataUser});
+  const [formPassword, setFormPassword] = useState({
+    newPassword: '',
+    confirmPassword: '',
+  });
 
   useEffect(() => {
     getdataUser();
@@ -37,39 +34,46 @@ function Profile(props) {
 
   const getdataUser = async () => {
     try {
+      console.log('get data user id');
       const idUser = await AsyncStorage.getItem('idUser');
-      await dispatch(dataUser(idUser));
+      const result = await dispatch(getDataUser(idUser));
+      console.log('result', result);
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
+
   const handleUpdateProfile = async event => {
     try {
-      event.persist();
-      // event.preventDefault();
-      // event.stopPropagation();
       let idUser = await AsyncStorage.getItem('idUser');
       idUser = JSON.parse(idUser);
-      // const form2 = {
-      //   firstName: 'arincoba2',
-      //   lastName: 'iffanaCoba2',
-      // };
-      await setForm({...tempForm});
       const result = await axios.patch(`user/profile/${idUser}`, form);
-      getdataUser();
-      // user = result.data
+      await getdataUser();
+      alert('Success Update');
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
       alert('Failed to Update');
     }
   };
 
-  const handleAccount = async event => {
-    event.persist();
-    // const {eventCount, target, text} = event.nativeEvent;
-    // console.log(eventCount, target, text);
-    await setTempForm({...tempForm, [event.target.name]: event.target.value});
-    console.log(event.target.value);
+  const handleUpdatePassword = async event => {
+    try {
+      console.log(formPassword);
+      let idUser = await AsyncStorage.getItem('idUser');
+      idUser = JSON.parse(idUser);
+      const result = await axios.patch(`user/password/${idUser}`, formPassword);
+      alert('Password Updated');
+    } catch (error) {
+      console.log(error.response.data.msg);
+      alert(`Failed to Update Password ${error.response.data.msg}`);
+    }
+  };
+
+  const handleAccount = async (text, name) => {
+    await setForm({...form, [name]: text});
+  };
+  const handlePassword = async (text, name) => {
+    await setFormPassword({...formPassword, [name]: text});
   };
   const handleTicket = data => {
     props.navigation.navigate('Ticket');
@@ -103,9 +107,9 @@ function Profile(props) {
               <Image
                 source={{
                   uri: `${
-                    user
-                      ? user.image
-                        ? `https://res.cloudinary.com/dabzupph0/image/upload/v1650965669/${user.image}`
+                    dataUser
+                      ? dataUser.image
+                        ? `https://res.cloudinary.com/dabzupph0/image/upload/v1650965669/${dataUser.image}`
                         : 'https://www.iconsdb.com/icons/preview/gray/user-4-xxl.png'
                       : 'https://www.iconsdb.com/icons/preview/gray/user-4-xxl.png'
                   }`,
@@ -119,7 +123,7 @@ function Profile(props) {
                 }}
               />
               <Text style={styles.profile__photo__name}>
-                {user ? `${user.firstName} ${user.lastName}` : ''}
+                {dataUser ? `${dataUser.firstName} ${dataUser.lastName}` : ''}
               </Text>
               <View style={styles.profile__photo__button}>
                 <Button
@@ -148,20 +152,8 @@ function Profile(props) {
                     name="firstName"
                     style={styles.profile__account__input}
                     id="exampleInputFirstName1"
-                    onChange={async (text, event) => {
-                      try {
-                        event.persist();
-                        await setTempForm({
-                          ...tempForm,
-                          firstName: text,
-                        });
-                        console.log(text, tempForm);
-                      } catch (error) {
-                        console.log(error);
-                      }
-                    }}
-                    // onChange={handleAccount}
-                    defaultValue={`${user ? user.firstName : ''}`}
+                    onChangeText={text => handleAccount(text, 'firstName')}
+                    defaultValue={`${dataUser ? dataUser.firstName : ''}`}
                   />
                 </View>
                 <View style={styles.mb_3}>
@@ -172,15 +164,9 @@ function Profile(props) {
                     type="text"
                     style={styles.profile__account__input}
                     id="exampleInputFirstName1"
-                    onChange={async text => {
-                      await setTempForm({
-                        ...tempForm,
-                        lastName: text,
-                      });
-                    }}
+                    onChangeText={text => handleAccount(text, 'lastName')}
                     name="lastName"
-                    // onChange={handleAccount}
-                    defaultValue={`${user ? user.lastName : ''}`}
+                    defaultValue={`${dataUser ? dataUser.lastName : ''}`}
                   />
                 </View>
                 <View style={styles.mb_3}>
@@ -192,13 +178,7 @@ function Profile(props) {
                     keyboardType="email-address"
                     style={styles.profile__account__input}
                     id="exampleInputEmail1"
-                    onChange={text => {
-                      setTempForm({
-                        ...tempForm,
-                        email: text,
-                      });
-                    }}
-                    defaultValue={`${user ? user.email : ''}`}
+                    defaultValue={`${dataUser ? dataUser.email : ''}`}
                     editable={false}
                   />
                 </View>
@@ -209,20 +189,13 @@ function Profile(props) {
                   <View style={styles.input__group}>
                     {/* <View style={'input-group-text'} id="addon-wrapping"> */}
                     <Text>+62 </Text>
-                    {/* </View> */}
                     <TextInput
                       type="tel"
                       style={styles.form__control__telp}
                       id="exampleInputPhone1"
-                      onChange={async text => {
-                        await setTempForm({
-                          ...tempForm,
-                          noTelp: text,
-                        });
-                      }}
+                      onChangeText={text => handleAccount(text, 'noTelp')}
                       name="noTelp"
-                      // onChange={handleAccount}
-                      defaultValue={`${user ? user.noTelp : ''}`}
+                      defaultValue={`${dataUser ? dataUser.noTelp : ''}`}
                       aria-describedby="addon-wrapping"
                       keyboardType="phone-pad"
                     />
@@ -250,10 +223,11 @@ function Profile(props) {
                     type="text"
                     style={styles.profile__password__input}
                     id="exampleInputFirstName1"
-                    onChange={text => {
-                      setFormPassword({...form, newPassword: text});
+                    onChangeText={text => {
+                      handlePassword(text, 'newPassword');
                     }}
                     placeholder="type new password"
+                    secureTextEntry={true}
                   />
                 </View>
                 <View style={styles.mb_3}>
@@ -264,14 +238,19 @@ function Profile(props) {
                     type="email"
                     style={styles.profile__password__input}
                     id="exampleInputEmail1"
-                    onChange={text => {
-                      setForm({...form, confirmPassword: text});
+                    onChangeText={text => {
+                      handlePassword(text, 'confirmPassword');
                     }}
+                    secureTextEntry={true}
                     placeholder="type confirm password"
                   />
                 </View>
                 <View>
-                  <Button title="update password" color="#5F2EEA" />
+                  <Button
+                    title="update password"
+                    color="#5F2EEA"
+                    onPress={handleUpdatePassword}
+                  />
                 </View>
               </View>
             </View>

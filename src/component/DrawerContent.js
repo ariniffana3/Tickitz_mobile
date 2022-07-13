@@ -6,7 +6,7 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {useSelector, useDispatch} from 'react-redux';
-import {dataUser} from '../stores/actions/profile';
+import dataUser from '../stores/actions/profile';
 
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';

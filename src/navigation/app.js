@@ -78,7 +78,7 @@ function ProfileNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         component={Profile}
-        name="Profile"
+        name="ProfileFunction"
         options={{
           headerShown: false,
         }}
